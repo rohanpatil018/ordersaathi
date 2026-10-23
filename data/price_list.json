@@ -1,7 +1,14 @@
-{
+﻿{
   "chocolate cake 1kg": 900,
+  "chocolate cake 500g": 500,
   "pineapple cake 1kg": 850,
+  "pineapple cake 500g": 450,
+  "vanilla cake 1kg": 800,
+  "butterscotch cake 1kg": 850,
   "samosa": 15,
   "cupcakes": 40,
-  "cookies (box)": 250
+  "cookies (box)": 250,
+  "chocolate brownies": 35,
+  "ladoo": 20,
+  "pastry": 60
 }

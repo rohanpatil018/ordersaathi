@@ -1,4 +1,4 @@
-from urllib.parse import quote
+﻿from urllib.parse import quote
 
 from app.aggregate import line_total, pretty_date
 from app.extractor.normalize import fmt_num
@@ -17,7 +17,7 @@ def wa_link(text: str) -> str:
 
 def _desc(l: OrderLine) -> str:
     when = " ".join(x for x in [pretty_date(l.delivery_date) if l.delivery_date else None, l.time_slot] if x)
-    return f"• {fmt_num(l.quantity)} × {l.item}" + (f" ({when})" if when else "")
+    return f"\U0001f4e6 {fmt_num(l.quantity)} x {l.item}" + (f" ({when})" if when else "")
 
 
 def build_reminders(lines: list[OrderLine], prices: dict) -> list[dict]:
@@ -34,18 +34,18 @@ def build_reminders(lines: list[OrderLine], prices: dict) -> list[dict]:
                 for f in l.flags:
                     if ASKS.get(f) and ASKS[f] not in asks:
                         asks.append(ASKS[f])
-            msg = (f"Hi {customer}! 👋 Quick check before I lock in your order:\n"
-                   + "\n".join(_desc(l) for l in review) + "\n" + " ".join(asks) + "\nThank you! 🙏")
+            msg = (f"Hi {customer}! \U0001f44b Quick check before I lock in your order:\n"
+                   + "\n".join(_desc(l) for l in review) + "\n" + " ".join(asks) + "\nThank you! \U0001f64f")
             out.append({"customer": customer, "kind": "confirm", "message": msg, "link": wa_link(msg)})
             continue
 
         pending = [l for l in ls if l.payment in ("online", "unknown")]
         if pending:
             total = sum(line_total(l, prices) for l in pending)
-            amount = f"The total is ₹{round(total)}. " if total else ""
+            amount = f"The total is \u20b9{round(total)}. " if total else ""
             ask = ("Please pay online and send me a screenshot." if all(l.payment == "online" for l in pending)
                    else "Would you like to pay online or on delivery?")
-            msg = (f"Hi {customer}! 👋 Your order is confirmed:\n" + "\n".join(_desc(l) for l in pending)
-                   + f"\n{amount}{ask} Thank you! 🙏")
+            msg = (f"Hi {customer}! \U0001f44b Your order is confirmed:\n" + "\n".join(_desc(l) for l in pending)
+                   + f"\n{amount}{ask} Thank you! \U0001f64f")
             out.append({"customer": customer, "kind": "payment", "message": msg, "link": wa_link(msg)})
     return out

@@ -1,10 +1,14 @@
-[10:12] Asha: Hi! I need 2 chocolate cakes 1kg each for Saturday evening.
-Can I pay on delivery?
-[10:15] You: Sure! Noted :)
-[11:03] Rahul: bhaiya 6 samosa extra kal morning
-[11:10] Asha: actually make it 3 cakes, not 2.
-[12:01] Neha: 24 cupcakes for Sat 4pm, paid advance
-[12:20] Karan: 1kg pineapple cake for sunday, delivery at 11am. will pay online.
-[13:05] Priya: 2 box cookies for tomorrow, COD
-[13:40] Nisha: 10 samosa for sat morning, actually 12. and also 1kg choco cake
-(if possible).
+﻿[09:05] Asha: Hi Meena! 2 chocolate cakes 1kg each chahiye Saturday evening
+[09:07] Meena: Sure Asha, Saturday evening done 😊
+[09:30] Asha: Actually make it 3 cakes please, relatives aa rahe hain
+[09:31] Meena: Noted, 3 chocolate cakes for Saturday evening
+[09:35] Asha: Aur 6 brownies bhi add kar do, Saturday hi
+[09:40] Asha: Payment kar diya GPay se ✅
+[10:12] Rohan: Bhaiya aaj shaam tak 12 vanilla cupcakes mil jayenge?
+[10:14] Meena: Haan Rohan, aaj 6 baje tak ready
+[10:15] Rohan: Cash on delivery theek hai
+[10:40] Nisha: Di kal ke liye ek cake chahiye... chocolate ya pineapple, pata nahi abhi
+[10:41] Meena: Confirm karke bata dena Nisha
+[11:05] Priya: 1 red velvet cake 500g Sunday morning, pay on delivery
+[11:20] Karan: 24 chocolate cupcakes Sunday afternoon for office party. Advance kal bhej dunga
+[11:45] Sneha: 2 boxes of cookies aaj evening please. Paid via UPI

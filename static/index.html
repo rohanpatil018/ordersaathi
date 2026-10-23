@@ -1,179 +1,459 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
+
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>OrderSaathi</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<style>
-  .card{background:#fff;border:1px solid #e2e8f0;border-radius:1rem;padding:1.25rem;margin-bottom:1.25rem}
-  .btn{border:1px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:.75rem;padding:.45rem .9rem;font-size:.875rem;font-weight:600;cursor:pointer;display:inline-block;text-decoration:none}
-  .btn:hover{background:#e0e7ff}
-  .btn:disabled{opacity:.6;cursor:wait}
-  .btn-primary{background:#4338ca;color:#fff;border-color:#4338ca}
-  .btn-primary:hover{background:#3730a3}
-  .btn-wa{background:#16a34a;color:#fff;border-color:#16a34a}
-  .btn-wa:hover{background:#15803d}
-  th{font-size:.7rem;text-transform:uppercase;letter-spacing:.04em;color:#64748b;text-align:left;padding:.5rem}
-  td{padding:.4rem .5rem;font-size:.875rem}
-  .inp{width:100%;min-width:90px;border:1px solid #e2e8f0;border-radius:.5rem;padding:.3rem .5rem;font-size:.875rem;background:#fff}
-  .inp:focus{outline:2px solid #a5b4fc}
-  .badge{display:inline-block;border-radius:.5rem;padding:.1rem .5rem;font-size:.75rem;font-weight:600}
-  .avatar{width:32px;height:32px;border-radius:9999px;background:#e0e7ff;color:#4338ca;display:flex;align-items:center;justify-content:center;font-weight:700}
-  @media print{ .no-print{display:none!important} body{background:#fff} .card{border:none;padding:0} }
-</style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>OrderSaathi – WhatsApp Order Tracker for Home Bakers</title>
+    <meta name="description" content="Paste your WhatsApp customer chat and instantly get a prep list, delivery sheet, and ready-to-send payment reminders. Built for home bakers and small food sellers.">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧁</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+
+        .card {
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+            padding: 1.25rem;
+            margin-bottom: 1.25rem;
+            box-shadow: 0 1px 3px rgba(0,0,0,.04);
+            transition: box-shadow .2s;
+        }
+        .card:hover { box-shadow: 0 4px 12px rgba(67,56,202,.07); }
+
+        .btn {
+            border: 1px solid #c7d2fe;
+            background: #eef2ff;
+            color: #3730a3;
+            border-radius: .75rem;
+            padding: .45rem .9rem;
+            font-size: .875rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-block;
+            text-decoration: none;
+            transition: background .15s, transform .1s;
+        }
+        .btn:hover { background: #e0e7ff; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn:disabled { opacity: .6; cursor: wait; transform: none; }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4338ca, #6366f1);
+            color: #fff;
+            border-color: #4338ca;
+            box-shadow: 0 2px 8px rgba(67,56,202,.3);
+        }
+        .btn-primary:hover { background: linear-gradient(135deg, #3730a3, #4f46e5); box-shadow: 0 4px 12px rgba(67,56,202,.4); }
+
+        .btn-wa { background: #16a34a; color: #fff; border-color: #16a34a; }
+        .btn-wa:hover { background: #15803d; }
+
+        th {
+            font-size: .7rem;
+            text-transform: uppercase;
+            letter-spacing: .04em;
+            color: #64748b;
+            text-align: left;
+            padding: .5rem;
+            white-space: nowrap;
+        }
+        td { padding: .4rem .5rem; font-size: .875rem; }
+
+        .inp {
+            width: 100%;
+            min-width: 90px;
+            border: 1px solid #e2e8f0;
+            border-radius: .5rem;
+            padding: .3rem .5rem;
+            font-size: .875rem;
+            background: #fff;
+            transition: border-color .15s, box-shadow .15s;
+        }
+        .inp:focus { outline: none; border-color: #a5b4fc; box-shadow: 0 0 0 3px rgba(165,180,252,.2); }
+
+        .badge {
+            display: inline-block;
+            border-radius: .5rem;
+            padding: .1rem .5rem;
+            font-size: .75rem;
+            font-weight: 600;
+        }
+
+        .avatar {
+            width: 32px; height: 32px;
+            border-radius: 9999px;
+            background: #e0e7ff;
+            color: #4338ca;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        /* ── Spinner ── */
+        .spinner {
+            display: inline-block;
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,.4);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin .7s linear infinite;
+            vertical-align: middle;
+            margin-right: .4rem;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Today banner ── */
+        #todayBanner {
+            background: linear-gradient(135deg, #eef2ff, #f0fdf4);
+            border: 1px solid #c7d2fe;
+            border-radius: 1rem;
+            padding: 1rem 1.25rem;
+            margin-bottom: 1.25rem;
+            display: none;
+        }
+        #todayBanner.visible { display: block; animation: fadeSlide .35s ease; }
+        @keyframes fadeSlide { from { opacity:0; transform:translateY(-8px); } to { opacity:1; transform:translateY(0); } }
+
+        /* ── Row highlight animation ── */
+        tr.flash-ok { animation: flashGreen .6s ease; }
+        @keyframes flashGreen { 0%,100% { background:transparent; } 50% { background:#dcfce7; } }
+
+        /* ── Section number badges ── */
+        .section-num {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 24px; height: 24px;
+            background: #4338ca;
+            color: #fff;
+            border-radius: 50%;
+            font-size: .75rem;
+            font-weight: 700;
+            margin-right: .5rem;
+            flex-shrink: 0;
+        }
+
+        /* ── Offline warning banner ── */
+        .offline-banner {
+            background: linear-gradient(135deg, #fffbeb, #fef3c7);
+            border: 1px solid #fcd34d;
+            border-radius: .75rem;
+            padding: .75rem 1rem;
+            font-size: .875rem;
+            color: #92400e;
+            display: flex;
+            align-items: flex-start;
+            gap: .5rem;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { background: #fff; }
+            .card { border: none; padding: 0; box-shadow: none; }
+            #todayBanner { display: block !important; }
+        }
+
+        @media (max-width: 640px) {
+            .hide-mobile { display: none; }
+        }
+    </style>
 </head>
+
 <body class="bg-slate-50 text-slate-800">
 
-<header class="bg-white border-b no-print">
-  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between gap-4 flex-wrap">
-    <div class="flex items-center gap-3">
-      <div class="text-3xl">🧁</div>
-      <div>
-        <h1 class="text-xl font-bold text-indigo-900">OrderSaathi</h1>
-        <p class="text-sm text-slate-500">Turn messy WhatsApp orders into a clean plan</p>
-      </div>
-    </div>
-    <div class="text-xs bg-green-50 text-green-800 border border-green-200 rounded-xl px-3 py-2 max-w-md">
-      <b>Privacy:</b> use sample or fake data only. The chat text is sent to Gemini to extract orders. Nothing is saved on our server.
-    </div>
-  </div>
-</header>
-
-<main class="max-w-6xl mx-auto px-4 py-6">
-
-  <!-- 1. Paste -->
-  <section class="card no-print">
-    <div class="flex items-start justify-between gap-3 flex-wrap mb-3">
-      <div>
-        <h2 class="text-lg font-bold text-indigo-900">1. Paste WhatsApp chat</h2>
-        <p class="text-sm text-slate-500">Customer names and their messages. Hinglish and typos are fine.</p>
-      </div>
-      <button class="btn" onclick="loadSample()">Load sample chat</button>
-    </div>
-    <textarea id="chat" rows="9" maxlength="5000" class="inp" style="font-family:ui-monospace,monospace"
-      placeholder="[10:12] Asha: Hi! I need 2 chocolate cakes 1kg each for Saturday evening..."
-      oninput="$('count').textContent = this.value.length + '/5000'"></textarea>
-    <div class="flex items-center gap-3 flex-wrap mt-3">
-      <label class="text-sm text-slate-600">Chat date
-        <input type="date" id="refDate" class="inp" style="width:auto;display:inline-block">
-      </label>
-      <span class="text-xs text-slate-400">Used to turn "kal" and "Sat" into real dates</span>
-      <span id="count" class="text-xs text-slate-400 ml-auto">0/5000</span>
-    </div>
-    <button id="extractBtn" class="btn btn-primary w-full mt-3" style="padding:.75rem" onclick="extract()">✨ Extract orders</button>
-    <div id="banner" class="mt-3"></div>
-    <div id="error" class="hidden mt-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-3"></div>
-  </section>
-
-  <div id="results" class="hidden">
-
-    <div id="summary" class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-5 no-print"></div>
-
-    <!-- 2. Review -->
-    <section class="card no-print">
-      <div class="flex items-start justify-between gap-3 flex-wrap mb-3">
-        <div>
-          <h2 class="text-lg font-bold text-indigo-900">2. Review orders</h2>
-          <p class="text-sm text-slate-500">Fix anything marked yellow, then press "Mark OK". Everything below updates as you edit.</p>
+    <!-- HEADER -->
+    <header class="bg-white border-b no-print sticky top-0 z-10 shadow-sm">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-3">
+                <div class="text-3xl">🧁</div>
+                <div>
+                    <h1 class="text-xl font-bold text-indigo-900">OrderSaathi</h1>
+                    <p class="text-sm text-slate-500 hide-mobile">Turn messy WhatsApp chats into a clean baking plan</p>
+                </div>
+            </div>
+            <div class="text-xs bg-green-50 text-green-800 border border-green-200 rounded-xl px-3 py-2 max-w-sm">
+                🔒 <b>Privacy:</b> Use sample or fake data only. Chat text goes to Gemini for extraction. Nothing is stored on our server.
+            </div>
         </div>
-        <button class="btn" onclick="addRow()">+ Add order</button>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full" style="min-width:900px">
-          <thead><tr><th>#</th><th>Customer</th><th>Item</th><th>Qty</th><th>Date</th><th>Time</th><th>Payment</th><th>Notes</th><th>Status</th><th></th></tr></thead>
-          <tbody id="orderRows"></tbody>
-        </table>
-      </div>
-      <datalist id="slots"><option value="Morning"><option value="Afternoon"><option value="Evening"><option value="Night"></datalist>
-    </section>
+    </header>
 
-    <div class="grid md:grid-cols-2 gap-5">
-      <!-- 3. Prep -->
-      <section class="card">
-        <h2 class="text-lg font-bold text-indigo-900">3. Prep list</h2>
-        <p class="text-sm text-slate-500 mb-3">Total to prepare per day.</p>
-        <div class="overflow-x-auto"><table class="w-full"><thead><tr><th>Date</th><th>Item</th><th>Total</th></tr></thead><tbody id="prepRows"></tbody></table></div>
-      </section>
-      <!-- 4. Delivery -->
-      <section class="card">
-        <h2 class="text-lg font-bold text-indigo-900">4. Delivery sheet</h2>
-        <p class="text-sm text-slate-500 mb-3">Sorted by date and time.</p>
-        <div class="overflow-x-auto"><table class="w-full"><thead><tr><th>When</th><th>Customer</th><th>Item</th><th>Qty</th><th>Pay</th></tr></thead><tbody id="deliveryRows"></tbody></table></div>
-      </section>
-    </div>
+    <main class="max-w-6xl mx-auto px-4 py-6">
 
-    <!-- 5. Reminders -->
-    <section class="card no-print">
-      <h2 class="text-lg font-bold text-indigo-900">5. Messages to send</h2>
-      <p class="text-sm text-slate-500 mb-3">Confirm unclear orders and chase payments. WhatsApp opens with the text ready, and you pick the contact.</p>
-      <div id="reminders"></div>
-    </section>
+        <!-- TODAY BANNER (filled after extraction) -->
+        <div id="todayBanner"></div>
 
-    <!-- 6. Export -->
-    <section class="card no-print">
-      <h2 class="text-lg font-bold text-indigo-900 mb-3">6. Export</h2>
-      <div class="flex gap-2 flex-wrap">
-        <button class="btn" onclick="window.print()">🖨 Print / Save as PDF</button>
-        <button class="btn" onclick="downloadCsv()">⬇ Download delivery sheet (CSV)</button>
-      </div>
-    </section>
-  </div>
-</main>
+        <!-- 1. Paste -->
+        <section class="card no-print">
+            <div class="flex items-start justify-between gap-3 flex-wrap mb-3">
+                <div>
+                    <h2 class="text-lg font-bold text-indigo-900 flex items-center">
+                        <span class="section-num">1</span>Paste WhatsApp chat
+                    </h2>
+                    <p class="text-sm text-slate-500 mt-1">Customer names and their messages. Hinglish and typos are fine.</p>
+                </div>
+                <div class="flex gap-2 flex-wrap">
+                    <input type="file" id="chatFile" accept=".txt,text/plain" class="hidden" onchange="loadFile(this)">
+                    <button class="btn" type="button" onclick="$('chatFile').click()">📎 Upload .txt export</button>
+                    <button class="btn" type="button" id="sampleBtn" onclick="loadSample()">📋 Load sample chat</button>
+                </div>
+            </div>
+            <textarea id="chat" rows="9" maxlength="15000" class="inp" style="font-family:ui-monospace,monospace;resize:vertical"
+                placeholder="[10:12] Asha: Hi! I need 2 chocolate cakes 1kg each for Saturday evening..."
+                oninput="$('count').textContent = this.value.length + '/15000'"></textarea>
+            <div class="flex items-center gap-3 flex-wrap mt-3">
+                <label class="text-sm text-slate-600">📅 Chat date
+                    <input type="date" id="refDate" class="inp" style="width:auto;display:inline-block;margin-left:.4rem">
+                </label>
+                <label class="text-sm text-slate-600">👤 Your name in chat
+                    <input id="sellerName" class="inp" style="width:auto;display:inline-block;margin-left:.4rem" placeholder="e.g. Meena (or You)">
+                </label>
+                <span class="text-xs text-slate-400 hide-mobile">Used to turn "kal" and "Sat" into real dates</span>
+                <span id="count" class="text-xs text-slate-400 ml-auto">0/15000</span>
+            </div>
+            <button id="extractBtn" class="btn btn-primary w-full mt-3" style="padding:.75rem;font-size:1rem" onclick="extract()">
+                🔍 Extract orders
+            </button>
+            <div id="banner" class="mt-3"></div>
+            <div id="error" class="hidden mt-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm p-3"></div>
+        </section>
 
-<script>
-const $ = (id) => document.getElementById(id);
-const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const state = { lines: [], plan: null };
-const PAY = { cod: "COD", paid: "Paid", online: "Online", unknown: "Not specified" };
-const PAY_CLS = { cod: "bg-slate-100 text-slate-700", paid: "bg-green-100 text-green-700", online: "bg-blue-100 text-blue-700", unknown: "bg-yellow-100 text-yellow-800" };
-const STATUS = { confirmed: ["Confirmed", "bg-green-100 text-green-700"], updated: ["Updated", "bg-blue-100 text-blue-700"], needs_review: ["Needs review", "bg-yellow-100 text-yellow-800"] };
+        <div id="results" class="hidden">
 
-$("refDate").value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+            <!-- Summary stat cards -->
+            <div id="summary" class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-5 no-print"></div>
 
-async function api(path, body) {
-  const res = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : undefined);
-  if (!res.ok) {
-    let msg = res.statusText;
-    try { const j = await res.json(); msg = typeof j.detail === "string" ? j.detail : JSON.stringify(j.detail); } catch {}
-    throw new Error(msg);
-  }
-  return res.json();
-}
-const showError = (m) => { const e = $("error"); e.textContent = m; e.classList.remove("hidden"); };
-const clearError = () => $("error").classList.add("hidden");
+            <!-- 2. Review -->
+            <section class="card no-print">
+                <div class="flex items-start justify-between gap-3 flex-wrap mb-3">
+                    <div>
+                        <h2 class="text-lg font-bold text-indigo-900 flex items-center">
+                            <span class="section-num">2</span>Review orders
+                        </h2>
+                        <p class="text-sm text-slate-500 mt-1">Fix anything marked yellow, then press "Mark OK". Everything below updates live.</p>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button class="btn" id="markAllBtn" onclick="markAllOk()" style="display:none">✅ Mark all OK</button>
+                        <button class="btn" onclick="addRow()">+ Add order</button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full" style="min-width:900px">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Customer</th>
+                                <th>Item</th>
+                                <th>Qty</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Payment</th>
+                                <th>Notes</th>
+                                <th>Status</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="orderRows"></tbody>
+                    </table>
+                </div>
+                <datalist id="slots">
+                    <option value="Morning">
+                    <option value="Afternoon">
+                    <option value="Evening">
+                    <option value="Night">
+                </datalist>
+            </section>
 
-async function loadSample() {
-  try { const d = await api("/api/sample"); $("chat").value = d.chat_text; $("count").textContent = d.chat_text.length + "/5000"; clearError(); }
-  catch (e) { showError(e.message); }
-}
+            <div class="grid md:grid-cols-2 gap-5">
+                <!-- 3. Prep -->
+                <section class="card">
+                    <h2 class="text-lg font-bold text-indigo-900 flex items-center mb-1">
+                        <span class="section-num">3</span>Prep list
+                    </h2>
+                    <p class="text-sm text-slate-500 mb-3">Total to prepare per day — ready to print.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr><th>Date</th><th>Item</th><th>Total</th></tr>
+                            </thead>
+                            <tbody id="prepRows"></tbody>
+                        </table>
+                    </div>
+                </section>
+                <!-- 4. Delivery -->
+                <section class="card">
+                    <h2 class="text-lg font-bold text-indigo-900 flex items-center mb-1">
+                        <span class="section-num">4</span>Delivery sheet
+                    </h2>
+                    <p class="text-sm text-slate-500 mb-3">Sorted by date and time slot.</p>
+                    <div class="overflow-x-auto">
+                        <table class="w-full">
+                            <thead>
+                                <tr><th>When</th><th>Customer</th><th>Item</th><th>Qty</th><th>Pay</th></tr>
+                            </thead>
+                            <tbody id="deliveryRows"></tbody>
+                        </table>
+                    </div>
+                </section>
+            </div>
 
-async function extract() {
-  clearError();
-  const btn = $("extractBtn");
-  if (!$("chat").value.trim()) return showError("Paste a chat first (or press Load sample chat).");
-  btn.disabled = true; btn.textContent = "Reading your chat…";
-  try {
-    const data = await api("/api/extract", { chat_text: $("chat").value, reference_date: $("refDate").value || null });
-    state.lines = data.lines;
-    $("banner").innerHTML = data.warning
-      ? `<div class="rounded-xl bg-amber-50 border border-amber-200 text-amber-800 text-sm p-3">⚠ ${esc(data.warning)}</div>`
-      : `<div class="text-xs text-slate-400">Extracted with ${esc(data.engine)}. Please review the rows marked yellow.</div>`;
-    if (!state.lines.length) { $("results").classList.add("hidden"); return showError("No orders found in this chat."); }
-    $("results").classList.remove("hidden");
-    renderTable();
-    await refreshPlan();
-    $("results").scrollIntoView({ behavior: "smooth" });
-  } catch (e) { showError(e.message); }
-  finally { btn.disabled = false; btn.textContent = "✨ Extract orders"; }
-}
+            <!-- 5. Messages -->
+            <section class="card no-print">
+                <h2 class="text-lg font-bold text-indigo-900 flex items-center mb-1">
+                    <span class="section-num">5</span>Messages to send
+                </h2>
+                <p class="text-sm text-slate-500 mb-3">Confirm unclear orders and chase payments. WhatsApp opens with the message ready — you just pick the contact.</p>
+                <div id="reminders"></div>
+            </section>
 
-/* ---------- editable table ---------- */
-function renderTable() {
-  $("orderRows").innerHTML = state.lines.map((l, i) => {
-    const [label, cls] = STATUS[l.status] || STATUS.confirmed;
-    const flags = (l.flags || []).map(f => `<div class="text-xs text-yellow-700">⚠ ${esc(f)}</div>`).join("");
-    return `<tr class="border-t align-top ${l.status === "needs_review" ? "bg-yellow-50" : ""}">
+            <!-- 6. Export -->
+            <section class="card no-print">
+                <h2 class="text-lg font-bold text-indigo-900 flex items-center mb-3">
+                    <span class="section-num">6</span>Export
+                </h2>
+                <div class="flex gap-2 flex-wrap">
+                    <button class="btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+                    <button class="btn" onclick="downloadCsv()">📥 Download delivery sheet (CSV)</button>
+                </div>
+                <p class="text-xs text-slate-400 mt-2">Print hides the editing toolbar and gives you a clean prep list + delivery sheet.</p>
+            </section>
+
+        </div>
+    </main>
+
+    <script>
+        const $ = (id) => document.getElementById(id);
+        const esc = (s) => String(s ?? "").replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+        const state = { lines: [], plan: null };
+        const PAY = { cod: "COD", paid: "Paid ✓", online: "Online", unknown: "Not set" };
+        const PAY_CLS = { cod: "bg-slate-100 text-slate-700", paid: "bg-green-100 text-green-700", online: "bg-blue-100 text-blue-700", unknown: "bg-yellow-100 text-yellow-800" };
+        const STATUS = { confirmed: ["Confirmed", "bg-green-100 text-green-700"], updated: ["Updated ✎", "bg-blue-100 text-blue-700"], needs_review: ["Needs review", "bg-yellow-100 text-yellow-800"] };
+
+        $("refDate").value = new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 10);
+
+        /* ---------- helpers ---------- */
+        async function api(path, body) {
+            const res = await fetch(path, body ? { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) } : undefined);
+            if (!res.ok) {
+                let msg = res.statusText;
+                try { const j = await res.json(); msg = typeof j.detail === "string" ? j.detail : JSON.stringify(j.detail); } catch { }
+                throw new Error(msg);
+            }
+            return res.json();
+        }
+        const showError = (m) => { const e = $("error"); e.textContent = m; e.classList.remove("hidden"); };
+        const clearError = () => $("error").classList.add("hidden");
+
+        const MAX = 15000;
+
+        function loadFile(input) {
+            const f = input.files[0];
+            if (!f) return;
+            const r = new FileReader();
+            r.onload = () => {
+                let t = String(r.result);
+                if (t.length > MAX) {
+                    t = t.slice(-MAX);
+                    t = t.slice(t.indexOf("\n") + 1);
+                    showError("That chat was long, so I kept the most recent part.");
+                } else clearError();
+                $("chat").value = t;
+                $("count").textContent = t.length + "/" + MAX;
+            };
+            r.onerror = () => showError("Could not read that file. Please try another .txt file.");
+            r.readAsText(f);
+            input.value = "";
+        }
+
+        async function loadSample() {
+            clearError();
+            const btn = $("sampleBtn");
+            btn.disabled = true;
+            btn.textContent = "Loading…";
+            try {
+                const data = await api("/api/sample");
+                $("chat").value = data.chat_text || "";
+                $("count").textContent = $("chat").value.length + "/" + MAX;
+                if (!data.chat_text) showError("The sample chat file is empty.");
+                else { $("sellerName").value = "Meena"; }
+            } catch (e) {
+                showError("Could not load sample chat: " + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "📋 Load sample chat";
+            }
+        }
+
+        /* ---------- extract ---------- */
+        async function extract() {
+            clearError();
+            const btn = $("extractBtn");
+            if (!$("chat").value.trim()) return showError("Paste a chat first (or press Load sample chat).");
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>Reading your chat…';
+            try {
+                const data = await api("/api/extract", {
+                    chat_text: $("chat").value,
+                    reference_date: $("refDate").value || null,
+                    seller_name: $("sellerName").value.trim() || null
+                });
+                state.lines = data.lines;
+
+                if (data.warning) {
+                    $("banner").innerHTML = `<div class="offline-banner">⚠️ <div><b>Offline mode active</b> — Gemini was unavailable, so smart rules were used instead. Results may be less accurate.<br><span class="text-xs opacity-75">${esc(data.warning)}</span></div></div>`;
+                } else {
+                    $("banner").innerHTML = `<div class="text-xs text-slate-400 mt-1">✨ Extracted with <b>${esc(data.engine)}</b>. Rows marked yellow need your review — check dates and quantities.</div>`;
+                }
+
+                if (!state.lines.length) { $("results").classList.add("hidden"); return showError("No orders found in this chat."); }
+                $("results").classList.remove("hidden");
+                renderTable();
+                await refreshPlan();
+                updateTodayBanner();
+                $("results").scrollIntoView({ behavior: "smooth" });
+            } catch (e) { showError(e.message); }
+            finally { btn.disabled = false; btn.innerHTML = "🔍 Extract orders"; }
+        }
+
+        /* ---------- today banner ---------- */
+        function updateTodayBanner() {
+            const today = $("refDate").value;
+            const todayLines = state.lines.filter(l => l.delivery_date === today);
+            const banner = $("todayBanner");
+            if (!todayLines.length) { banner.classList.remove("visible"); return; }
+
+            // group by item
+            const totals = {};
+            todayLines.forEach(l => { totals[l.item] = (totals[l.item] || 0) + l.quantity; });
+            const items = Object.entries(totals).map(([item, qty]) => `<b>${qty}× ${esc(item)}</b>`).join(", ");
+
+            banner.innerHTML = `
+                <div class="flex items-start gap-3">
+                    <div class="text-2xl">📋</div>
+                    <div>
+                        <div class="font-bold text-indigo-900 text-base">Today's bake list (${esc(today)})</div>
+                        <div class="text-sm text-slate-700 mt-1">${items}</div>
+                        <div class="text-xs text-slate-500 mt-1">${todayLines.length} order line${todayLines.length !== 1 ? 's' : ''} for ${new Set(todayLines.map(l => l.customer)).size} customer${new Set(todayLines.map(l => l.customer)).size !== 1 ? 's' : ''}</div>
+                    </div>
+                </div>`;
+            banner.classList.add("visible");
+        }
+
+        /* ---------- editable table ---------- */
+        function renderTable() {
+            const needsReview = state.lines.some(l => l.status === "needs_review");
+            $("markAllBtn").style.display = needsReview ? "inline-block" : "none";
+
+            $("orderRows").innerHTML = state.lines.map((l, i) => {
+                const [label, cls] = STATUS[l.status] || STATUS.confirmed;
+                const flags = (l.flags || []).map(f => `<div class="text-xs text-yellow-700 mt-1">⚠ ${esc(f)}</div>`).join("");
+                return `<tr id="row-${i}" class="border-t align-top ${l.status === "needs_review" ? "bg-yellow-50" : ""}">
       <td class="text-slate-400">${i + 1}</td>
       <td><input class="inp" value="${esc(l.customer)}" oninput="edit(${i},'customer',this.value)"></td>
       <td><input class="inp" value="${esc(l.item)}" oninput="edit(${i},'item',this.value)"></td>
@@ -185,88 +465,132 @@ function renderTable() {
       <td><input class="inp" value="${esc(l.notes || "")}" oninput="edit(${i},'notes',this.value)"></td>
       <td><span class="badge ${cls}">${label}</span>${flags}</td>
       <td style="white-space:nowrap">
-        ${l.status === "needs_review" ? `<button class="btn" onclick="markOk(${i})">Mark OK</button>` : ""}
+        ${l.status === "needs_review" ? `<button class="btn" style="margin-bottom:.25rem" onclick="markOk(${i})">Mark OK</button><br>` : ""}
         <button class="btn" style="color:#b91c1c;border-color:#fecaca;background:#fef2f2" onclick="removeRow(${i})">✕</button>
       </td></tr>`;
-  }).join("");
-}
+            }).join("");
+        }
 
-function edit(i, field, v) {
-  const l = state.lines[i];
-  if (field === "quantity") l.quantity = parseFloat(v) || 0;
-  else if (["delivery_date", "time_slot", "notes"].includes(field)) l[field] = v || null;
-  else l[field] = v;
-  schedulePlan();
-}
-function markOk(i) { state.lines[i].status = "confirmed"; state.lines[i].flags = []; renderTable(); refreshPlan(); }
-function removeRow(i) { state.lines.splice(i, 1); renderTable(); refreshPlan(); }
-function addRow() {
-  state.lines.push({ id: Date.now() % 1000000, customer: "", item: "", quantity: 1, delivery_date: null, date_phrase: null,
-    time_slot: null, payment: "unknown", notes: null, status: "confirmed", flags: [] });
-  renderTable();
-}
+        function edit(i, field, v) {
+            const l = state.lines[i];
+            if (field === "quantity") l.quantity = parseFloat(v) || 0;
+            else if (["delivery_date", "time_slot", "notes"].includes(field)) l[field] = v || null;
+            else l[field] = v;
+            schedulePlan();
+        }
 
-/* ---------- plan ---------- */
-let timer;
-const schedulePlan = () => { clearTimeout(timer); timer = setTimeout(refreshPlan, 400); };
+        function markOk(i) {
+            state.lines[i].status = "confirmed";
+            state.lines[i].flags = [];
+            renderTable();
+            refreshPlan();
+            updateTodayBanner();
+            const row = $(`row-${i}`);
+            if (row) { row.classList.add("flash-ok"); setTimeout(() => row.classList.remove("flash-ok"), 700); }
+        }
 
-async function refreshPlan() {
-  const lines = state.lines.filter(l => l.customer.trim() && l.item.trim());
-  if (!lines.length) { state.plan = null; return renderPlan(); }
-  try { state.plan = await api("/api/plan", { lines }); renderPlan(); }
-  catch (e) { showError(e.message); }
-}
+        function markAllOk() {
+            state.lines.forEach(l => { if (l.status === "needs_review") { l.status = "confirmed"; l.flags = []; } });
+            renderTable();
+            refreshPlan();
+            updateTodayBanner();
+        }
 
-function statCard(label, value, cls = "") {
-  return `<div class="card" style="margin:0;padding:.9rem"><div class="text-xs text-slate-500">${label}</div><div class="text-2xl font-bold ${cls}">${value}</div></div>`;
-}
+        function removeRow(i) { state.lines.splice(i, 1); renderTable(); refreshPlan(); updateTodayBanner(); }
 
-function renderPlan() {
-  const p = state.plan;
-  if (!p) {
-    $("summary").innerHTML = ""; $("prepRows").innerHTML = ""; $("deliveryRows").innerHTML = "";
-    $("reminders").innerHTML = `<p class="text-sm text-slate-500">Add at least one complete order.</p>`; return;
-  }
-  const s = p.summary;
-  $("summary").innerHTML =
-    statCard("Customers", s.customers) + statCard("Order lines", s.items) +
-    statCard("Need review", s.needs_review, s.needs_review ? "text-yellow-600" : "text-green-600") +
-    statCard("Order value", s.total_amount ? "₹" + s.total_amount : "–") +
-    statCard("Still to collect", s.to_collect ? "₹" + s.to_collect : "–", "text-indigo-700") +
-    (s.unpriced_items.length ? `<div class="col-span-full text-xs text-slate-500">No price set for: ${s.unpriced_items.map(esc).join(", ")} (edit data/price_list.json)</div>` : "");
+        function addRow() {
+            state.lines.push({
+                id: Date.now() % 1000000, customer: "", item: "", quantity: 1, delivery_date: null,
+                date_phrase: null, time_slot: null, payment: "unknown", notes: null, status: "confirmed", flags: []
+            });
+            renderTable();
+        }
 
-  $("prepRows").innerHTML = p.prep_list.map(r =>
-    `<tr class="border-t"><td>${esc(r.date_label)}</td><td>${esc(r.item)}</td>
-     <td><span class="badge ${r.label.includes("review") ? "bg-yellow-100 text-yellow-800" : "bg-green-50 text-green-700"}">${esc(r.label)}</span></td></tr>`).join("");
+        /* ---------- plan ---------- */
+        let timer;
+        const schedulePlan = () => { clearTimeout(timer); timer = setTimeout(refreshPlan, 400); };
 
-  $("deliveryRows").innerHTML = p.delivery_sheet.map(r =>
-    `<tr class="border-t"><td>${esc(r.date_label)}<div class="text-xs text-slate-500">${esc(r.slot)}</div></td>
-     <td>${esc(r.customer)}</td><td>${esc(r.item)}</td><td>${r.quantity}</td>
-     <td><span class="badge ${PAY_CLS[r.payment]}">${PAY[r.payment]}</span></td></tr>`).join("");
+        async function refreshPlan() {
+            const lines = state.lines.filter(l => l.customer.trim() && l.item.trim());
+            if (!lines.length) { state.plan = null; return renderPlan(); }
+            try { state.plan = await api("/api/plan", { lines }); renderPlan(); }
+            catch (e) { showError(e.message); }
+        }
 
-  $("reminders").innerHTML = p.reminders.length ? p.reminders.map((r, i) =>
-    `<div class="rounded-xl border p-3 mb-3">
-       <div class="flex items-center gap-2 mb-2"><div class="avatar">${esc((r.customer[0] || "?").toUpperCase())}</div><b>${esc(r.customer)}</b>
-         <span class="badge ${r.kind === "confirm" ? "bg-yellow-100 text-yellow-800" : "bg-blue-100 text-blue-700"}">${r.kind === "confirm" ? "Confirm order" : "Payment due"}</span></div>
-       <pre class="whitespace-pre-wrap text-sm bg-slate-50 rounded-lg p-3" style="font-family:inherit">${esc(r.message)}</pre>
-       <div class="flex gap-2 mt-2 flex-wrap"><button class="btn" onclick="copyMsg(${i}, this)">Copy</button>
-         <a class="btn btn-wa" href="${esc(r.link)}" target="_blank" rel="noopener">Open in WhatsApp</a></div></div>`).join("")
-    : `<p class="text-sm text-slate-500">Nothing to send: all orders are confirmed and paid or cash on delivery. 🎉</p>`;
-}
+        function statCard(label, value, cls = "") {
+            return `<div class="card" style="margin:0;padding:.9rem;cursor:default"><div class="text-xs text-slate-500 uppercase tracking-wide">${label}</div><div class="text-2xl font-bold ${cls} mt-1">${value}</div></div>`;
+        }
 
-async function copyMsg(i, btn) {
-  try { await navigator.clipboard.writeText(state.plan.reminders[i].message); btn.textContent = "Copied ✓"; setTimeout(() => btn.textContent = "Copy", 1500); }
-  catch { alert("Could not copy. Select the text and copy it manually."); }
-}
+        function renderPlan() {
+            const p = state.plan;
+            if (!p) {
+                $("summary").innerHTML = "";
+                $("prepRows").innerHTML = "";
+                $("deliveryRows").innerHTML = "";
+                $("reminders").innerHTML = `<p class="text-sm text-slate-500">Add at least one complete order.</p>`;
+                return;
+            }
+            const s = p.summary;
+            $("summary").innerHTML =
+                statCard("Customers", s.customers) +
+                statCard("Order lines", s.items) +
+                statCard("Need review", s.needs_review, s.needs_review ? "text-yellow-600" : "text-green-600") +
+                statCard("Order value", s.total_amount ? "₹" + s.total_amount : "₹?") +
+                statCard("Still to collect", s.to_collect ? "₹" + s.to_collect : "₹?", "text-indigo-700") +
+                (s.unpriced_items.length ? `<div class="col-span-full text-xs text-slate-500">No price set for: ${s.unpriced_items.map(esc).join(", ")} — edit <code>data/price_list.json</code></div>` : "");
 
-function downloadCsv() {
-  if (!state.plan) return;
-  const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
-  const rows = [["Date", "Time", "Customer", "Item", "Qty", "Payment", "Status", "Amount"]].concat(
-    state.plan.delivery_sheet.map(r => [r.date_label, r.slot, r.customer, r.item, r.quantity, PAY[r.payment], r.status, r.amount]));
-  const blob = new Blob(["\ufeff" + rows.map(r => r.map(q).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
-  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "delivery-sheet.csv"; a.click();
-}
-</script>
+            $("prepRows").innerHTML = p.prep_list.map(r =>
+                `<tr class="border-t">
+                    <td class="font-medium">${esc(r.date_label)}</td>
+                    <td>${esc(r.item)}</td>
+                    <td><span class="badge ${r.label.includes("review") ? "bg-yellow-100 text-yellow-800" : "bg-green-50 text-green-700"}">${esc(r.label)}</span></td>
+                 </tr>`).join("");
+
+            $("deliveryRows").innerHTML = p.delivery_sheet.map(r =>
+                `<tr class="border-t">
+                    <td><div class="font-medium">${esc(r.date_label)}</div><div class="text-xs text-slate-500">${esc(r.slot)}</div></td>
+                    <td>${esc(r.customer)}</td>
+                    <td>${esc(r.item)}</td>
+                    <td class="font-medium">${r.quantity}</td>
+                    <td><span class="badge ${PAY_CLS[r.payment]}">${PAY[r.payment]}</span></td>
+                 </tr>`).join("");
+
+            $("reminders").innerHTML = p.reminders.length
+                ? p.reminders.map((r, i) =>
+                    `<div class="rounded-xl border p-4 mb-3 transition-shadow hover:shadow-md">
+                       <div class="flex items-center gap-2 mb-2">
+                         <div class="avatar">${esc((r.customer[0] || "?").toUpperCase())}</div>
+                         <b>${esc(r.customer)}</b>
+                         <span class="badge ${r.kind === "confirm" ? "bg-yellow-100 text-yellow-800" : "bg-blue-100 text-blue-700"}">${r.kind === "confirm" ? "⚠ Confirm order" : "💰 Payment due"}</span>
+                       </div>
+                       <pre class="whitespace-pre-wrap text-sm bg-slate-50 rounded-lg p-3" style="font-family:inherit">${esc(r.message)}</pre>
+                       <div class="flex gap-2 mt-3 flex-wrap">
+                         <button class="btn" onclick="copyMsg(${i}, this)">📋 Copy message</button>
+                         <a class="btn btn-wa" href="${esc(r.link)}" target="_blank" rel="noopener">💬 Open in WhatsApp</a>
+                       </div>
+                     </div>`).join("")
+                : `<div class="rounded-xl bg-green-50 border border-green-200 text-green-800 text-sm p-4 flex items-center gap-2">
+                     ✅ <span>Nothing to send — all orders are confirmed and paid or cash on delivery.</span>
+                   </div>`;
+        }
+
+        async function copyMsg(i, btn) {
+            try {
+                await navigator.clipboard.writeText(state.plan.reminders[i].message);
+                btn.textContent = "✓ Copied!";
+                setTimeout(() => btn.textContent = "📋 Copy message", 1500);
+            } catch { alert("Could not copy. Select the text and copy it manually."); }
+        }
+
+        function downloadCsv() {
+            if (!state.plan) return;
+            const q = (v) => `"${String(v ?? "").replace(/"/g, '""')}"`;
+            const rows = [["Date", "Time", "Customer", "Item", "Qty", "Payment", "Status", "Amount (₹)"]].concat(
+                state.plan.delivery_sheet.map(r => [r.date_label, r.slot, r.customer, r.item, r.quantity, PAY[r.payment], r.status, r.amount]));
+            const blob = new Blob(["\ufeff" + rows.map(r => r.map(q).join(",")).join("\n")], { type: "text/csv;charset=utf-8" });
+            const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "ordersaathi-delivery.csv"; a.click();
+        }
+    </script>
 </body>
+
 </html>
