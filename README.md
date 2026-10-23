@@ -6,8 +6,8 @@
 
 | | |
 |---|---|
-| **Live demo** | [ADD YOUR RENDER URL HERE] |
-| **Video walkthrough** | [ADD YOUR VIDEO LINK HERE] |
+| **Live demo** |https://ordersaathi-eyk5.onrender.com/|
+| **Video walkthrough** |https://drive.google.com/file/d/1pZm2BY1g4tt4__ic1bA5WIBsvTsWYI9a/view?usp=drive_link|
 | **GitHub repository** | https://github.com/rohanpatil018/ordersaathi |
 | **Built by** | Rohan Patil |
 
@@ -43,22 +43,6 @@ Paste (or upload) the chat and get, in one screen:
 6. **Export** as a print/PDF view or a CSV of the delivery sheet.
 
 The baker can edit any row, press **Mark OK**, and everything below updates live.
-
-
-## Screenshots
-
-### 1. Main Dashboard
-![OrderSaathi main dashboard](screenshots/01-home.png)
-
-### 2. Extracted Orders
-![Extracted orders and review flags](screenshots/02-extracted-orders.png)
-
-### 3. Prep List and Delivery Sheet
-![Prep list and delivery sheet](screenshots/03-prep-delivery.png)
-
-### 4. Reminders and Export
-![WhatsApp reminders and export options](screenshots/04-reminders-export.png)
-
 
 ### What I would improve next
 - Connect the WhatsApp Business API so orders arrive without any copy-paste.
