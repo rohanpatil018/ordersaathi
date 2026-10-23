@@ -9,18 +9,71 @@ from app.extractor.normalize import fmt_num
 from app.schemas import OrderLine
 
 PRICE_FILE = Path(__file__).resolve().parent.parent / "data" / "price_list.json"
+STOP_WORDS = {"of", "the", "a", "an"}
+
+
+def _singular(w: str) -> str:
+    if len(w) > 4 and w.endswith("ies"):
+        return w[:-3] + "y"          # brownies -> browny, cookies -> cooky (same on both sides)
+    if len(w) > 4 and w.endswith("xes"):
+        return w[:-2]                # boxes -> box
+    if len(w) > 3 and w.endswith("s") and not w.endswith("ss"):
+        return w[:-1]                # cakes -> cake
+    return w
 
 
 def _key(name: str) -> str:
-    return re.sub(r"[^a-z0-9]", "", name.lower())
+    """Normalise an item name: 'Choco Cakes 1 kg' -> 'chocolate cake 1kg'."""
+    s = str(name or "").lower()
+    s = re.sub(r"\bchoco\b", "chocolate", s)
+    s = re.sub(r"(\d+(?:\.\d+)?)\s*(?:kilograms?|kilos?|kgs?)\b", r"\1kg", s)
+    s = re.sub(r"(\d+)\s*(?:grams?|gms?|gm|g)\b", r"\1g", s)
+    words = [_singular(w) for w in re.findall(r"[a-z0-9]+", s) if w not in STOP_WORDS]
+    return " ".join(words)
 
 
-def load_prices() -> dict[str, float]:
+class PriceBook(dict):
+    """dict of normalised item name -> price, with tolerant lookups."""
+
+    def _resolve(self, key: str):
+        if dict.__contains__(self, key):
+            return key
+        tokens = set(key.split())
+        if not tokens:
+            return None
+        best, best_score = None, 0.0
+        for k in dict.keys(self):
+            kt = set(k.split())
+            if kt <= tokens:                      # price name fully inside the item name
+                score = 100 + len(kt)
+            elif tokens <= kt:                    # item is a shorter form of the price name
+                score = 50 + len(tokens) - 0.1 * len(kt - tokens) + (0.5 if "1kg" in kt else 0)
+            else:
+                continue
+            if score > best_score:
+                best, best_score = k, score
+        return best
+
+    def __contains__(self, key):
+        return self._resolve(key) is not None
+
+    def __getitem__(self, key):
+        r = self._resolve(key)
+        if r is None:
+            raise KeyError(key)
+        return dict.__getitem__(self, r)
+
+    def get(self, key, default=None):
+        r = self._resolve(key)
+        return default if r is None else dict.__getitem__(self, r)
+
+
+def load_prices() -> dict:
     try:
         raw = json.loads(PRICE_FILE.read_text(encoding="utf-8"))
     except Exception:
-        return {}
-    return {_key(k): v for k, v in raw.items()}
+        return PriceBook()
+    return PriceBook({_key(k): v for k, v in raw.items()})
 
 
 def line_total(l: OrderLine, prices: dict) -> float:
