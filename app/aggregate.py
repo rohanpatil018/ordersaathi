@@ -1,4 +1,4 @@
-import datetime as dt
+﻿import datetime as dt
 import json
 import re
 from collections import defaultdict
@@ -70,7 +70,7 @@ class PriceBook(dict):
 
 def load_prices() -> dict:
     try:
-        raw = json.loads(PRICE_FILE.read_text(encoding="utf-8"))
+        raw = json.loads(PRICE_FILE.read_text(encoding="utf-8-sig"))
     except Exception:
         return PriceBook()
     return PriceBook({_key(k): v for k, v in raw.items()})
