@@ -44,6 +44,22 @@ Paste (or upload) the chat and get, in one screen:
 
 The baker can edit any row, press **Mark OK**, and everything below updates live.
 
+
+## Screenshots
+
+### 1. Main Dashboard
+![OrderSaathi main dashboard](screenshots/01-home.png)
+
+### 2. Extracted Orders
+![Extracted orders and review flags](screenshots/02-extracted-orders.png)
+
+### 3. Prep List and Delivery Sheet
+![Prep list and delivery sheet](screenshots/03-prep-delivery.png)
+
+### 4. Reminders and Export
+![WhatsApp reminders and export options](screenshots/04-reminders-export.png)
+
+
 ### What I would improve next
 - Connect the WhatsApp Business API so orders arrive without any copy-paste.
 - Accept a screenshot of a chat (Gemini can read images) as an input.
