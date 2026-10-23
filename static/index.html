@@ -535,8 +535,8 @@
                 statCard("Customers", s.customers) +
                 statCard("Order lines", s.items) +
                 statCard("Need review", s.needs_review, s.needs_review ? "text-yellow-600" : "text-green-600") +
-                statCard("Order value", s.total_amount ? "₹" + s.total_amount : "₹?") +
-                statCard("Still to collect", s.to_collect ? "₹" + s.to_collect : "₹?", "text-indigo-700") +
+                statCard("Order value", s.unpriced_items.length === s.items ? "₹?" : "₹" + s.total_amount) +
+                statCard("Still to collect", s.unpriced_items.length === s.items ? "₹?" : "₹" + s.to_collect, "text-indigo-700") +
                 (s.unpriced_items.length ? `<div class="col-span-full text-xs text-slate-500">No price set for: ${s.unpriced_items.map(esc).join(", ")} — edit <code>data/price_list.json</code></div>` : "");
 
             $("prepRows").innerHTML = p.prep_list.map(r =>
